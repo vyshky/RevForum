@@ -1,0 +1,2 @@
+перейти в папку rev-front
+npm run dev
