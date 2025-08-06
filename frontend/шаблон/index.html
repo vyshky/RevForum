@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming Forum</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programming Forum</div>
+            <nav class="nav">
+                <a href="#home">Главная</a>
+                <a href="#forums">Форумы</a>
+                <a href="#search">Поиск</a>
+                <a href="#members">Участники</a>
+                <a href="#help">Помощь</a>
+            </nav>
+            <div class="user-info">
+                <span>Добро пожаловать, Гость</span>
+                <a href="#login" style="color: #3498db;">Войти</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="#home">Главная</a> > Форумы
+        </div>
+
+        <div class="forum-stats">
+            <div class="stat-item">
+                <div class="stat-number">15,437</div>
+                <div class="stat-label">Всего сообщений</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">2,843</div>
+                <div class="stat-label">Всего тем</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">1,234</div>
+                <div class="stat-label">Участников</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">89</div>
+                <div class="stat-label">Онлайн сейчас</div>
+            </div>
+        </div>
+
+        <div class="forum-section">
+            <div class="section-header">
+                Frontend Разработка
+            </div>
+            <div class="forum-list">
+                <div class="forum-item">
+                    <div class="forum-icon">JS</div>
+                    <div class="forum-info">
+                        <h3>JavaScript</h3>
+                        <div class="forum-description">Обсуждение JavaScript, ES6+, библиотек и фреймворков</div>
+                    </div>
+                    <div class="forum-stats-item">
+                        <span class="stats-number">1,256</span>
+                        <span>тем</span><br>
+                        <span class="stats-number">8,943</span>
+                        <span>сообщений</span>
+                    </div>
+                    <div class="last-post">
+                        <a href="#">Async/await vs Promises</a><br>
+                        <small>от DevMaster, сегодня в 14:32</small>
+                    </div>
+                </div>
+                
+                <div class="forum-item">
+                    <div class="forum-icon">R</div>
+                    <div class="forum-info">
+                        <h3>React</h3>
+                        <div class="forum-description">React.js, хуки, компоненты и экосистема</div>
+                    </div>
+                    <div class="forum-stats-item">
+                        <span class="stats-number">834</span>
+                        <span>тем</span><br>
+                        <span class="stats-number">5,672</span>
+                        <span>сообщений</span>
+                    </div>
+                    <div class="last-post">
+                        <a href="#">useEffect оптимизация</a><br>
+                        <small>от ReactGuru, сегодня в 13:15</small>
+                    </div>
+                </div>
+
+                <div class="forum-item">
+                    <div class="forum-icon">V</div>
+                    <div class="forum-info">
+                        <h3>Vue.js</h3>
+                        <div class="forum-description">Vue.js 3, Composition API, Vuex и Nuxt</div>
+                    </div>
+                    <div class="forum-stats-item">
+                        <span class="stats-number">523</span>
+                        <span>тем</span><br>
+                        <span class="stats-number">3,421</span>
+                        <span>сообщений</span>
+                    </div>
+                    <div class="last-post">
+                        <a href="#">Vue 3 vs Vue 2</a><br>
+                        <small>от VueDeveloper, вчера в 18:45</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="forum-section">
+            <div class="section-header">
+                Backend Разработка
+            </div>
+            <div class="forum-list">
+                <div class="forum-item">
+                    <div class="forum-icon">N</div>
+                    <div class="forum-info">
+                        <h3>Node.js</h3>
+                        <div class="forum-description">Node.js, Express, API разработка и серверные решения</div>
+                    </div>
+                    <div class="forum-stats-item">
+                        <span class="stats-number">756</span>
+                        <span>тем</span><br>
+                        <span class="stats-number">4,832</span>
+                        <span>сообщений</span>
+                    </div>
+                    <div class="last-post">
+                        <a href="#">Express vs Fastify</a><br>
+                        <small>от BackendDev, сегодня в 11:20</small>
+                    </div>
+                </div>
+
+                <div class="forum-item">
+                    <div class="forum-icon">P</div>
+                    <div class="forum-info">
+                        <h3>Python</h3>
+                        <div class="forum-description">Python, Django, Flask, машинное обучение</div>
+                    </div>
+                    <div class="forum-stats-item">
+                        <span class="stats-number">1,123</span>
+                        <span>тем</span><br>
+                        <span class="stats-number">7,654</span>
+                        <span>сообщений</span>
+                    </div>
+                    <div class="last-post">
+                        <a href="#">Django REST Framework</a><br>
+                        <small>от PythonPro, сегодня в 09:30</small>
+                    </div>
+                </div>
+
+                <div class="forum-item">
+                    <div class="forum-icon">DB</div>
+                    <div class="forum-info">
+                        <h3>Базы данных</h3>
+                        <div class="forum-description">MySQL, PostgreSQL, MongoDB, Redis и другие СУБД</div>
+                    </div>
+                    <div class="forum-stats-item">
+                        <span class="stats-number">445</span>
+                        <span>тем</span><br>
+                        <span class="stats-number">2,876</span>
+                        <span>сообщений</span>
+                    </div>
+                    <div class="last-post">
+                        <a href="#">Оптимизация запросов SQL</a><br>
+                        <small>от DBAdmin, вчера в 16:10</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="forum-section">
+            <div class="section-header">
+                Общие вопросы
+            </div>
+            <div class="forum-list">
+                <div class="forum-item">
+                    <div class="forum-icon">?</div>
+                    <div class="forum-info">
+                        <h3>Вопросы новичков</h3>
+                        <div class="forum-description">Место для начинающих программистов</div>
+                    </div>
+                    <div class="forum-stats-item">
+                        <span class="stats-number">2,134</span>
+                        <span>тем</span><br>
+                        <span class="stats-number">12,876</span>
+                        <span>сообщений</span>
+                    </div>
+                    <div class="last-post">
+                        <a href="#">Как начать изучать программирование?</a><br>
+                        <small>от Mentor, сегодня в 15:45</small>
+                    </div>
+                </div>
+
+                <div class="forum-item">
+                    <div class="forum-icon">💼</div>
+                    <div class="forum-info">
+                        <h3>Карьера и работа</h3>
+                        <div class="forum-description">Поиск работы, собеседования, развитие карьеры</div>
+                    </div>
+                    <div class="forum-stats-item">
+                        <span class="stats-number">678</span>
+                        <span>тем</span><br>
+                        <span class="stats-number">4,321</span>
+                        <span>сообщений</span>
+                    </div>
+                    <div class="last-post">
+                        <a href="#">Как подготовиться к собеседованию</a><br>
+                        <small>от HRManager, сегодня в 12:00</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="online-users">
+            <div class="online-header">Сейчас на форуме: 89 пользователей</div>
+            <div class="online-list">
+                <span class="online-user">AdminUser</span>
+                <span class="online-user">DevMaster</span>
+                <span class="online-user">CodeNinja</span>
+                <span class="online-user">ReactGuru</span>
+                <span class="online-user">PythonPro</span>
+                <span class="online-user">VueDeveloper</span>
+                <span class="online-user">BackendDev</span>
+                <span class="online-user">WebDesigner</span>
+                <span class="online-user">DataScientist</span>
+                <span class="online-user">MobileDev</span>
+                <span class="online-user">и еще 79...</span>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <h3>Последние темы</h3>
+            <ul class="recent-topics">
+                <li><a href="#">Оптимизация React приложений</a> <small>2 мин назад</small></li>
+                <li><a href="#">Микросервисы на Node.js</a> <small>15 мин назад</small></li>
+                <li><a href="#">Паттерны проектирования в JavaScript</a> <small>1 час назад</small></li>
+                <li><a href="#">Docker для разработчиков</a> <small>2 часа назад</small></li>
+                <li><a href="#">Тестирование с Jest</a> <small>3 часа назад</small></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 Programming Forum. Все права защищены.</p>
+        <p>Powered by Custom Forum Engine</p>
+    </footer>
+</body>
+</html>
