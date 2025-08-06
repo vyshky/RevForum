@@ -11,7 +11,29 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: rev_forum
     volumes:
-      - ./shared_folder:/shared_folder
+      - ../shared_folder:/shared_folder
+    networks:
+      - app-network
+
+  node-app:
+    image: node:20
+    container_name: node_container
+    working_dir: /app
+    volumes:
+      - ../frontend/rev-front:/app
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+    command: sh -c "npm install --legacy-peer-deps && npm run dev"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   postgres_data:
