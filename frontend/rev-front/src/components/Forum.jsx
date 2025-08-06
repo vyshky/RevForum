@@ -1,8 +1,7 @@
-// src/App.jsx
 import React, { useState } from 'react';
-import './App.css';
+import './Forum.css';
 
-const App = () => {
+const Forum = () => {
   const [searchQuery, setSearchQuery] = useState('');
   
   // Данные для категорий
@@ -203,4 +202,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Forum;
