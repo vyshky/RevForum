@@ -31,6 +31,21 @@ services:
     networks:
       - app-network
 
+
+  golang:
+    image: golang:latest
+    container_name: golang_container
+    working_dir: /app  # Абсолютный путь внутри контейнера
+    volumes:
+      - ../backend:/app  # Монтируем backend в /app
+    command: sh -c "go mod tidy && go get gorm.io/driver/postgres && go get github.com/joho/godotenv && go install github.com/joho/godotenv/cmd/godotenv@latest && go get -u gorm.io/gorm && go run main.go"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
