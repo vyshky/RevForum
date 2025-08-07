@@ -1,13 +1,14 @@
-package Database
+package database
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 	"log"
 	"os"
 	"time"
+
+	"github.com/joho/godotenv"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type User struct {
@@ -21,7 +22,7 @@ type User struct {
 var DB *gorm.DB
 
 func Init() {
-	err := godotenv.Load()
+	err := godotenv.Load("./resource/.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -41,9 +42,9 @@ func Init() {
 		panic("failed to connect to database")
 	}
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	db.AutoMigrate(&User{})
+	_db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	_db.AutoMigrate(&User{})
 
 	fmt.Println("Connected to the database successfully!")
-	DB = db
+	DB = _db
 }

@@ -1,13 +1,11 @@
 package main
 
 import (
-	// "github.com/gin-gonic/gin"
-	"REVFORUM/Database"
-	"REVFORUM/Server"
+	database "REVFORUM/database"
+	server "REVFORUM/server"
 )
 
 func main() {
-	Database.Init()
-	Server.Init_Server()
-
+	database.Init()
+	server.Init_Server()
 }
