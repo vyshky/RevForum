@@ -2,12 +2,13 @@ package Database
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 	"log"
 	"os"
 	"time"
+
+	"github.com/joho/godotenv"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type User struct {
@@ -21,7 +22,8 @@ type User struct {
 var DB *gorm.DB
 
 func Init() {
-	err := godotenv.Load()
+
+	err := godotenv.Load("./resource/.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}

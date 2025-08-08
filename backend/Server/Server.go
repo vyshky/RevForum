@@ -2,14 +2,13 @@ package Server
 
 import (
 	"REVFORUM/Database"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Init_Server() {
 	router := gin.Default()
-	router.LoadHTMLGlob("templates/*")
-	router.Static("/static", "./static")
 
 	/* *****************************************************************************************
 
