@@ -1,19 +1,24 @@
 // src/App.jsx
 import React, { useState } from 'react';
 import './App.css';
+import UserTable from './UserTable'; // Убедись, что путь к компоненту правильный
+import Login from './Login'; // Импортируем компонент входа
+import Register from './Register'; // Импортируем компонент регистрации
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // Данные для категорий
+  // Состояние для управления активной "страницей" (теперь включает 'login' и 'register')
+  const [activeView, setActiveView] = useState('home');
+
+  // Данные для категорий (остаются без изменений)
   const categories = [
     {
       id: 'films',
       title: 'Фильмы',
       icon: '🎬',
       subcategories: [
-        { 
-          id: 'horror', 
+        {
+          id: 'horror',
           title: 'Ужасы',
           threads: [
             { id: 1, title: 'Лучшие хорроры 2023', posts: 142 },
@@ -21,16 +26,16 @@ const App = () => {
             { id: 3, title: 'Азиатские ужасы', posts: 67 }
           ]
         },
-        { 
-          id: 'comedy', 
+        {
+          id: 'comedy',
           title: 'Комедии',
           threads: [
             { id: 1, title: 'Новые комедии', posts: 112 },
             { id: 2, title: 'Чёрный юмор', posts: 54 }
           ]
         },
-        { 
-          id: 'fantasy', 
+        {
+          id: 'fantasy',
           title: 'Фэнтези',
           threads: [
             { id: 1, title: 'Фэнтези 2023', posts: 78 },
@@ -44,8 +49,8 @@ const App = () => {
       title: 'Игры',
       icon: '🎮',
       subcategories: [
-        { 
-          id: 'rpg', 
+        {
+          id: 'rpg',
           title: 'RPG',
           threads: [
             { id: 1, title: 'Skyrim моды', posts: 342 },
@@ -53,8 +58,8 @@ const App = () => {
             { id: 3, title: 'Лучшие RPG 2023', posts: 156 }
           ]
         },
-        { 
-          id: 'shooters', 
+        {
+          id: 'shooters',
           title: 'Шутеры',
           threads: [
             { id: 1, title: 'CS2 обсуждение', posts: 512 },
@@ -68,8 +73,8 @@ const App = () => {
       title: 'Книги',
       icon: '📚',
       subcategories: [
-        { 
-          id: 'fantasy', 
+        {
+          id: 'fantasy',
           title: 'Фэнтези',
           threads: [
             { id: 1, title: 'Новинки фэнтези', posts: 87 },
@@ -80,10 +85,10 @@ const App = () => {
     }
   ];
 
-  // Фильтрация данных по поиску
+  // Фильтрация данных по поиску (остается без изменений)
   const filterData = () => {
     if (!searchQuery) return categories;
-    
+
     const query = searchQuery.toLowerCase();
     return categories
       .map(category => ({
@@ -91,7 +96,7 @@ const App = () => {
         subcategories: category.subcategories
           .map(subcategory => ({
             ...subcategory,
-            threads: subcategory.threads.filter(thread => 
+            threads: subcategory.threads.filter(thread =>
               thread.title.toLowerCase().includes(query)
             )
           }))
@@ -108,34 +113,45 @@ const App = () => {
       <nav className="sidebar">
         <div className="logo">Форум</div>
         <ul>
-          <li className="active">
+          {/* Пункт "Главная" */}
+          <li className={activeView === 'home' ? 'active' : ''} onClick={() => setActiveView('home')}>
             <div className="menu-icon">🏠</div>
             <span>Главная</span>
           </li>
-          <li>
+          {/* Пункт "Поиск" */}
+          <li className={activeView === 'search' ? 'active' : ''} onClick={() => setActiveView('search')}>
             <div className="menu-icon">🔍</div>
             <span>Поиск</span>
           </li>
-          <li>
+          {/* Пункт "Участники" */}
+          <li className={activeView === 'members' ? 'active' : ''} onClick={() => setActiveView('members')}>
             <div className="menu-icon">👥</div>
             <span>Участники</span>
           </li>
-          <li>
+          {/* Пункт "Рейтинги" */}
+          <li className={activeView === 'ratings' ? 'active' : ''} onClick={() => setActiveView('ratings')}>
             <div className="menu-icon">📊</div>
             <span>Рейтинги</span>
           </li>
-          <li>
+          {/* Пункт "Настройки" */}
+          <li className={activeView === 'settings' ? 'active' : ''} onClick={() => setActiveView('settings')}>
             <div className="menu-icon">⚙️</div>
             <span>Настройки</span>
           </li>
-          
+          {/* Разделитель */}
           <div className="divider"></div>
-          
-          <li>
+          {/* Пункт "Пользователи" - добавлен обработчик и класс активности */}
+          <li className={activeView === 'users' ? 'active' : ''} onClick={() => setActiveView('users')}>
+            <div className="menu-icon">👥</div>
+            <span>Пользователи</span>
+          </li>
+          {/* Пункт "Регистрация" - обновлен обработчик и класс активности */}
+          <li className={activeView === 'register' ? 'active' : ''} onClick={() => setActiveView('register')}>
             <div className="menu-icon">📝</div>
             <span>Регистрация</span>
           </li>
-          <li>
+          {/* Пункт "Войти" - обновлен обработчик и класс активности */}
+          <li className={activeView === 'login' ? 'active' : ''} onClick={() => setActiveView('login')}>
             <div className="menu-icon">🔑</div>
             <span>Войти</span>
           </li>
@@ -146,7 +162,7 @@ const App = () => {
         {/* Хедер с поиском */}
         <header className="forum-header">
           <div className="search-container">
-            <input 
+            <input
               type="text"
               placeholder="Поиск по форуму..."
               value={searchQuery}
@@ -160,44 +176,56 @@ const App = () => {
           </div>
         </header>
 
-        {/* Основное содержимое */}
-        <section className="content-area">
-          {filteredCategories.map(category => (
-            <div key={category.id} className="category-section">
-              <div className="category-header">
-                <div className="category-icon">{category.icon}</div>
-                <h2>{category.title}</h2>
-              </div>
-              
-              <div className="subcategories-container">
-                {category.subcategories.map(subcategory => (
-                  <div key={subcategory.id} className="subcategory-card">
-                    <div className="subcategory-header">
-                      <h3>{subcategory.title}</h3>
-                      <div className="thread-count">
-                        Тем: {subcategory.threads.length}
-                      </div>
-                    </div>
-                    
-                    <ul className="threads-list">
-                      {subcategory.threads.map(thread => (
-                        <li key={thread.id} className="thread-item">
-                          <div className="thread-icon">💬</div>
-                          <div className="thread-info">
-                            <div className="thread-title">{thread.title}</div>
-                            <div className="thread-stats">
-                              Сообщений: {thread.posts}
-                            </div>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
+        {/* Основное содержимое - условный рендеринг для разных "страниц" */}
+        <main className="main-content-wrapper">
+          {/* Условный рендеринг: проверяем activeView и отображаем соответствующий компонент */}
+          {activeView === 'users' ? (
+            <UserTable />
+          ) : activeView === 'login' ? (
+            <Login />
+          ) : activeView === 'register' ? (
+            <Register />
+          ) : (
+            // Иначе показываем основной контент форума (home, search и т.д.)
+            <section className="content-area">
+              {filteredCategories.map(category => (
+                <div key={category.id} className="category-section">
+                  <div className="category-header">
+                    <div className="category-icon">{category.icon}</div>
+                    <h2>{category.title}</h2>
                   </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </section>
+
+                  <div className="subcategories-container">
+                    {category.subcategories.map(subcategory => (
+                      <div key={subcategory.id} className="subcategory-card">
+                        <div className="subcategory-header">
+                          <h3>{subcategory.title}</h3>
+                          <div className="thread-count">
+                            Тем: {subcategory.threads.length}
+                          </div>
+                        </div>
+
+                        <ul className="threads-list">
+                          {subcategory.threads.map(thread => (
+                            <li key={thread.id} className="thread-item">
+                              <div className="thread-icon">💬</div>
+                              <div className="thread-info">
+                                <div className="thread-title">{thread.title}</div>
+                                <div className="thread-stats">
+                                  Сообщений: {thread.posts}
+                                </div>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </section>
+          )}
+        </main>
       </div>
     </div>
   );
