@@ -43,7 +43,11 @@ func Init() {
 	}
 
 	_db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	_db.AutoMigrate(&User{})
+	_db.AutoMigrate(
+		&User{},
+		&Themes_Collection{},
+		&Sub_Themes{},
+	)
 
 	fmt.Println("Connected to the database successfully!")
 	DB = _db

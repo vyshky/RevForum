@@ -1,24 +1,28 @@
 // src/ThemesList.jsx
 import React, { useState, useEffect } from 'react';
+import SubThemesList from './SubThemesList'; // Импортируем новый компонент
 
 const ThemesList = () => {
-    const [themes, setThemes] = useState([]); // Состояние для хранения списка тем
-    const [loading, setLoading] = useState(true); // Состояние для отслеживания загрузки списка тем
-    const [error, setError] = useState(null); // Состояние для отслеживания ошибок загрузки списка тем
+    const [themes, setThemes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Состояния для формы создания темы
+    // Состояния для модального окна создания темы
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [newThemeTitle, setNewThemeTitle] = useState('');
-    const [newThemeStatus, setNewThemeStatus] = useState('Активна'); // Значение по умолчанию
-    const [isCreating, setIsCreating] = useState(false); // Состояние для отслеживания процесса создания
-    const [createError, setCreateError] = useState(null); // Состояние для ошибок создания
-    const [createSuccess, setCreateSuccess] = useState(false); // Состояние для сообщения об успехе
+    const [newThemeStatus, setNewThemeStatus] = useState('Активна');
+    const [isCreating, setIsCreating] = useState(false);
+    const [createMessage, setCreateMessage] = useState({ type: '', text: '' }); // { type: 'error' | 'success', text: '...' }
+
+    // Состояние для управления отображением: список тем или подтемы конкретной темы
+    const [selectedTheme, setSelectedTheme] = useState(null); // null - показывать список тем, объект - показывать подтемы
 
     // Функция для получения данных о темах из API
     const fetchThemes = async () => {
         try {
             setLoading(true);
-            setError(null); // Сброс ошибки перед новой попыткой
-            const response = await fetch('http://localhost:8080/api/themes'); // Убедись, что URL правильный
+            setError(null);
+            const response = await fetch('http://localhost:8080/api/themes');
 
             if (!response.ok) {
                 const errorText = await response.text();
@@ -36,145 +40,185 @@ const ThemesList = () => {
         }
     };
 
-    // useEffect для загрузки тем при монтировании компонента
     useEffect(() => {
         fetchThemes();
     }, []);
 
     // Функция для обработки отправки формы создания темы
     const handleCreateTheme = async (e) => {
-        e.preventDefault(); // Предотвращаем перезагрузку страницы
+        e.preventDefault();
 
-        // Базовая валидация
         if (!newThemeTitle.trim()) {
-            setCreateError('Название темы не может быть пустым.');
+            setCreateMessage({ type: 'error', text: 'Название темы не может быть пустым.' });
             return;
         }
 
         setIsCreating(true);
-        setCreateError(null);
-        setCreateSuccess(false);
+        setCreateMessage({ type: '', text: '' }); // Сброс сообщений
 
         try {
-            // Отправляем POST-запрос на API для создания темы
-            const response = await fetch('http://localhost:8080/api/themes/create', { // Убедись, что URL правильный
+            // Убедись, что URL правильный (возможно, /api/themes без /create)
+            const response = await fetch('http://localhost:8080/api/themes/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Если потребуется аутентификация, добавь токен:
-                    // 'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     title: newThemeTitle,
                     status: newThemeStatus
-                    // ID и CreatedAt не отправляются, сервер их генерирует
                 }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                // Успешное создание
                 console.log('Theme created:', data);
-                setCreateSuccess(true);
-                // Сброс формы
+                setCreateMessage({ type: 'success', text: 'Тема успешно создана!' });
                 setNewThemeTitle('');
                 setNewThemeStatus('Активна');
-                // Обновляем список тем
-                fetchThemes(); // Простой способ - перезагрузить список
-                // Или можно добавить новую тему в состояние напрямую:
-                // setThemes(prevThemes => [...prevThemes, data.theme]); // если API возвращает созданную тему
+                fetchThemes();
+                // Автоматически закрыть модальное окно через 1.5 секунды
+                setTimeout(() => {
+                    setIsCreateModalOpen(false);
+                    setCreateMessage({ type: '', text: '' }); // Сброс сообщения при закрытии
+                }, 1500);
             } else {
-                // Ошибка от сервера
                 console.error('Error creating theme:', data);
-                setCreateError(data.error || `Ошибка создания темы: ${response.status} ${response.statusText}`);
+                setCreateMessage({ type: 'error', text: data.error || `Ошибка создания темы: ${response.status} ${response.statusText}` });
             }
         } catch (err) {
-            // Ошибка сети или другая ошибка fetch
             console.error('Network error creating theme:', err);
-            setCreateError('Не удалось подключиться к серверу. Попробуйте позже.');
+            setCreateMessage({ type: 'error', text: 'Не удалось подключиться к серверу. Попробуйте позже.' });
         } finally {
             setIsCreating(false);
         }
     };
 
-    if (loading && themes.length === 0) return <div className="content-area"><p>Загрузка тем...</p></div>; // Показываем загрузку только если список еще пуст
+    // Функция для перехода к отображению подтем конкретной темы
+    const handleViewSubThemes = (theme) => {
+        setSelectedTheme(theme);
+    };
+
+    // Функция для возврата к списку тем
+    const handleBackToThemes = () => {
+        setSelectedTheme(null);
+    };
+
+    // Функции управления модальным окном
+    const openCreateModal = () => {
+        setIsCreateModalOpen(true);
+        setCreateMessage({ type: '', text: '' }); // Сброс сообщений при открытии
+    };
+
+    const closeCreateModal = () => {
+        setIsCreateModalOpen(false);
+        setNewThemeTitle('');
+        setNewThemeStatus('Активна');
+        setCreateMessage({ type: '', text: '' }); // Сброс сообщений при закрытии
+    };
+
+    // Если выбрана конкретная тема, отображаем SubThemesList
+    if (selectedTheme) {
+        return <SubThemesList themeId={selectedTheme.id} themeTitle={selectedTheme.title} onBack={handleBackToThemes} />;
+    }
+
+    // Иначе отображаем список тем
+    if (loading && themes.length === 0) return <div className="content-area"><p>Загрузка тем...</p></div>;
     if (error) return <div className="content-area"><p style={{ color: 'red' }}>Ошибка загрузки тем: {error}</p></div>;
 
     return (
-        <div className="content-area">
-            <h2>Темы форума</h2>
-
-            {/* Форма создания новой темы */}
-            <div className="create-theme-form-container" style={{ marginBottom: '20px', padding: '15px', border: '1px solid #ccc', borderRadius: '5px' }}>
-                <h3>Создать новую тему</h3>
-                {createSuccess && <p style={{ color: 'green' }}>Тема успешно создана!</p>}
-                {createError && <p style={{ color: 'red' }}>{createError}</p>}
-                <form onSubmit={handleCreateTheme} className="create-theme-form">
-                    <div className="form-group" style={{ marginBottom: '10px' }}>
-                        <label htmlFor="new-theme-title" style={{ display: 'block', marginBottom: '5px' }}>Название темы:</label>
-                        <input
-                            type="text"
-                            id="new-theme-title"
-                            value={newThemeTitle}
-                            onChange={(e) => setNewThemeTitle(e.target.value)}
-                            required
-                            style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-                        />
-                    </div>
-                    <div className="form-group" style={{ marginBottom: '10px' }}>
-                        <label htmlFor="new-theme-status" style={{ display: 'block', marginBottom: '5px' }}>Статус:</label>
-                        <select
-                            id="new-theme-status"
-                            value={newThemeStatus}
-                            onChange={(e) => setNewThemeStatus(e.target.value)}
-                            style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-                        >
-                            <option value="Активна">Активна</option>
-                            <option value="Архивирована">Архивирована</option>
-                            {/* Добавь другие возможные статусы, если нужно */}
-                        </select>
-                    </div>
-                    <button
-                        type="submit"
-                        disabled={isCreating}
-                        style={{
-                            padding: '10px 15px',
-                            backgroundColor: isCreating ? '#ccc' : '#007bff',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '3px',
-                            cursor: isCreating ? 'not-allowed' : 'pointer'
-                        }}
-                    >
-                        {isCreating ? 'Создание...' : 'Создать тему'}
-                    </button>
-                </form>
+        <div className="content-area themes-content">
+            <div className="themes-header">
+                <h2>Темы форума</h2>
             </div>
 
-            <hr style={{ margin: '20px 0' }} /> {/* Разделитель */}
-
-            {/* Список тем */}
-            <h3>Существующие темы</h3>
-            {loading && themes.length > 0 && <p>Обновление списка...</p>} {/* Индикатор обновления, если список уже есть */}
+            {loading && themes.length > 0 && <p>Обновление списка...</p>}
             {themes.length > 0 ? (
-                <ul>
+                <div className="themes-grid">
                     {themes.map((theme) => (
-                        <li key={theme.id} style={{ marginBottom: '10px', padding: '10px', border: '1px solid #eee', borderRadius: '3px' }}>
-                            <strong>{theme.title}</strong>
-                            <span style={{ marginLeft: '10px', fontStyle: 'italic', color: theme.status === 'Активна' ? 'green' : 'orange' }}>
-                ({theme.status})
-              </span>
+                        <div key={theme.id} className="theme-card">
+                            {/* Делаем название темы кликабельным для перехода к подтемам */}
+                            <div
+                                className="theme-title"
+                                onClick={() => handleViewSubThemes(theme)}
+                            >
+                                {theme.title}
+                            </div>
+                            <div className={`theme-status ${theme.status === 'Активна' ? '' : 'inactive'}`}>
+                                {theme.status}
+                            </div>
                             {theme.created_at && (
-                                <span style={{ marginLeft: '10px', fontSize: '0.9em', color: '#666' }}>
-                  Создано: {new Date(theme.created_at).toLocaleDateString()}
-                </span>
+                                <div className="theme-date">
+                                    Создано: {new Date(theme.created_at).toLocaleDateString()}
+                                </div>
                             )}
-                        </li>
+                            {/* Кнопка для явного перехода к подтемам */}
+                            <button
+                                className="view-subthemes-btn"
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Предотвращает всплытие клика на карточку
+                                    handleViewSubThemes(theme);
+                                }}
+                            >
+                                Подтемы
+                            </button>
+                        </div>
                     ))}
-                </ul>
+                </div>
             ) : (
                 <p>Темы не найдены.</p>
+            )}
+
+            {/* Плавающая кнопка создания */}
+            <button className="floating-create-btn" onClick={openCreateModal} title="Создать новую тему">
+                +
+            </button>
+
+            {/* Модальное окно создания темы */}
+            {isCreateModalOpen && (
+                <div className="modal-overlay" onClick={closeCreateModal}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2>Создать новую тему</h2>
+                            <button className="close-modal-btn" onClick={closeCreateModal}>&times;</button>
+                        </div>
+                        {createMessage.text && (
+                            <div className={`modal-message ${createMessage.type}`}>
+                                {createMessage.text}
+                            </div>
+                        )}
+                        <form onSubmit={handleCreateTheme} className="create-form">
+                            <div className="form-group">
+                                <label htmlFor="modal-new-theme-title">Название темы:</label>
+                                <input
+                                    type="text"
+                                    id="modal-new-theme-title"
+                                    value={newThemeTitle}
+                                    onChange={(e) => setNewThemeTitle(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="modal-new-theme-status">Статус:</label>
+                                <select
+                                    id="modal-new-theme-status"
+                                    value={newThemeStatus}
+                                    onChange={(e) => setNewThemeStatus(e.target.value)}
+                                >
+                                    <option value="Активна">Активна</option>
+                                    <option value="Архивирована">Архивирована</option>
+                                </select>
+                            </div>
+                            <button
+                                type="submit"
+                                className="create-submit-btn"
+                                disabled={isCreating}
+                            >
+                                {isCreating ? 'Создание...' : 'Создать тему'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
             )}
         </div>
     );

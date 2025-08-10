@@ -40,8 +40,12 @@ func Init_Server() {
 
 	router.POST("/api/register", database.RegisterHandler(database.DB))
 	router.POST("/api/login", database.LoginHandler(database.DB))
+
 	router.GET("/api/themes", database.GetThemesHandler(database.DB))
 	router.POST("/api/themes/create", database.CreateThemeHandler(database.DB))
+
+	router.POST("/api/themes/subthemes", database.CreateSubThemeHandler(database.DB))
+	router.GET("/api/themes/:id/subthemes", database.GetSubThemesHandler(database.DB))
 
 	log.Println("Сервер запущен на http://localhost:8080/hello")
 	router.Run(":8080")

@@ -1,271 +1,272 @@
+/* src/App.css */
 :root {
-  --dark-bg: #1e1f26;
-  --darker-bg: #17181d;
-  --sidebar-bg: #141519;
-  --card-bg: #252831;
-  --card-border: #34384a;
-  --text-primary: #e6e7e9;
-  --text-secondary: #a1a4b3;
-  --accent-color: #6c5ce7;
-  --divider-color: #2d3039;
+    --dark-bg: #1e1f26;
+    --darker-bg: #17181d;
+    --sidebar-bg: #141519;
+    --card-bg: #252831;
+    --card-border: #34384a;
+    --text-primary: #e6e7e9;
+    --text-secondary: #a1a4b3;
+    --accent-color: #6c5ce7;
+    --divider-color: #2d3039;
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  background-color: var(--dark-bg);
-  color: var(--text-primary);
-  height: 100vh;
-  overflow: hidden;
+    background-color: var(--dark-bg);
+    color: var(--text-primary);
+    height: 100vh;
+    overflow: hidden;
 }
 
 .forum-container {
-  display: flex;
-  height: 100vh;
+    display: flex;
+    height: 100vh;
 }
 
 /* Левое меню */
 .sidebar {
-  width: 250px;
-  background-color: var(--sidebar-bg);
-  padding: 20px 0;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  border-right: 1px solid var(--divider-color);
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-right: 1px solid var(--divider-color);
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 30px;
-  color: var(--text-primary);
-  padding: 0 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--text-primary);
+    padding: 0 20px;
 }
 
 .sidebar ul {
-  list-style: none;
-  padding: 0 15px;
-  flex-grow: 1;
+    list-style: none;
+    padding: 0 15px;
+    flex-grow: 1;
 }
 
 .sidebar li {
-  padding: 12px 15px;
-  border-radius: 8px;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .sidebar li:hover {
-  background-color: var(--card-bg);
+    background-color: var(--card-bg);
 }
 
 .sidebar li.active {
-  background-color: var(--accent-color);
-  color: white;
+    background-color: var(--accent-color);
+    color: white;
 }
 
 .sidebar span {
-  margin-left: 12px;
-  font-size: 15px;
+    margin-left: 12px;
+    font-size: 15px;
 }
 
 .menu-icon {
-  font-size: 20px;
-  width: 24px;
-  text-align: center;
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
 }
 
 .divider {
-  height: 1px;
-  background-color: var(--divider-color);
-  margin: 15px 0;
+    height: 1px;
+    background-color: var(--divider-color);
+    margin: 15px 0;
 }
 
 /* Основной контент */
 .main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 /* Хедер */
 .forum-header {
-  background-color: var(--darker-bg);
-  padding: 15px 25px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--divider-color);
+    background-color: var(--darker-bg);
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--divider-color);
 }
 
 .search-container {
-  display: flex;
-  width: 60%;
-  max-width: 500px;
+    display: flex;
+    width: 60%;
+    max-width: 500px;
 }
 
 .search-container input {
-  flex: 1;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 30px 0 0 30px;
-  background-color: var(--card-bg);
-  color: var(--text-primary);
-  font-size: 15px;
-  outline: none;
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px 0 0 30px;
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 15px;
+    outline: none;
 }
 
 .search-container input::placeholder {
-  color: var(--text-secondary);
+    color: var(--text-secondary);
 }
 
 .search-button {
-  background-color: var(--accent-color);
-  border: none;
-  border-radius: 0 30px 30px 0;
-  padding: 0 20px;
-  cursor: pointer;
-  color: white;
-  font-size: 16px;
-  transition: background-color 0.3s;
+    background-color: var(--accent-color);
+    border: none;
+    border-radius: 0 30px 30px 0;
+    padding: 0 20px;
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+    transition: background-color 0.3s;
 }
 
 .search-button:hover {
-  background-color: #5d4fcf;
+    background-color: #5d4fcf;
 }
 
 .user-menu {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 15px;
-  border-radius: 30px;
-  background-color: var(--card-bg);
-  cursor: pointer;
-  transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 15px;
+    border-radius: 30px;
+    background-color: var(--card-bg);
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .user-menu:hover {
-  background-color: #2c2e3a;
+    background-color: #2c2e3a;
 }
 
 .user-avatar {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 /* Контент */
 .content-area {
-  flex: 1;
-  padding: 25px;
-  overflow-y: auto;
+    flex: 1;
+    padding: 25px;
+    overflow-y: auto;
 }
 
 .category-section {
-  margin-bottom: 35px;
+    margin-bottom: 35px;
 }
 
 .category-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--divider-color);
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--divider-color);
 }
 
 .category-icon {
-  font-size: 28px;
-  margin-right: 15px;
+    font-size: 28px;
+    margin-right: 15px;
 }
 
 .category-section h2 {
-  font-size: 24px;
-  color: var(--text-primary);
+    font-size: 24px;
+    color: var(--text-primary);
 }
 
 .subcategories-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
 }
 
 .subcategory-card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  padding: 20px;
-  transition: transform 0.3s, box-shadow 0.3s;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .subcategory-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .subcategory-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--divider-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--divider-color);
 }
 
 .subcategory-header h3 {
-  font-size: 18px;
-  color: var(--text-primary);
+    font-size: 18px;
+    color: var(--text-primary);
 }
 
 .thread-count {
-  background-color: var(--accent-color);
-  color: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: bold;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
 }
 
 .threads-list {
-  list-style: none;
+    list-style: none;
 }
 
 .thread-item {
-  display: flex;
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .thread-item:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .thread-icon {
-  font-size: 18px;
-  margin-right: 12px;
-  color: var(--accent-color);
+    font-size: 18px;
+    margin-right: 12px;
+    color: var(--accent-color);
 }
 
 .thread-info {
-  flex: 1;
+    flex: 1;
 }
 
 .thread-title {
-  font-size: 15px;
-  margin-bottom: 4px;
-  color: var(--text-primary);
+    font-size: 15px;
+    margin-bottom: 4px;
+    color: var(--text-primary);
 }
 
 .thread-stats {
-  font-size: 13px;
-  color: var(--text-secondary);
+    font-size: 13px;
+    color: var(--text-secondary);
 }
