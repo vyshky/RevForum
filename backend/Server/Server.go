@@ -2,19 +2,11 @@ package Server
 
 import (
 	database "REVFORUM/database"
-	"log"
-	"net/http"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"log"
+	"net/http"
 )
-
-type RegisterRequest struct {
-	Username string `json:"username" binding:"required"` // `binding` для валидации Gin
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required,min=6"` // Минимальная длина 6
-	// Другие поля при необходимости
-}
 
 func Init_Server() {
 	gin.SetMode(gin.ReleaseMode)
@@ -48,6 +40,8 @@ func Init_Server() {
 
 	router.POST("/api/register", database.RegisterHandler(database.DB))
 	router.POST("/api/login", database.LoginHandler(database.DB))
+	router.GET("/api/themes", database.GetThemesHandler(database.DB))
+	router.POST("/api/themes/create", database.CreateThemeHandler(database.DB))
 
 	log.Println("Сервер запущен на http://localhost:8080/hello")
 	router.Run(":8080")

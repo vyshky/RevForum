@@ -10,30 +10,11 @@ import (
 	"gorm.io/gorm"
 )
 
-type RegisterRequest struct {
+/*type RegisterRequest struct {
 	Username string `json:"username" binding:"required"` // `binding` для валидации Gin
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=6"` // Минимальная длина 6
 	// Другие поля при необходимости
-}
-
-// RegisterUser — функция регистрации нового пользователя.
-/*func RegisterUser(db *gorm.DB, username, email, password string) error {
-	// Генерируем хеш пароля с использованием bcrypt
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), 12)
-	if err != nil {
-		return err
-	}
-
-	// Создаём объект пользователя
-	user := User{ // Просто User, так как мы в том же пакете Database
-		Username:     username,
-		Email:        email,
-		PasswordHash: string(hash),
-	}
-
-	result := db.Create(&user)
-	return result.Error
 } */
 
 // RegisterHandler — обработчик HTTP-запроса для регистрации.
