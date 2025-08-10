@@ -11,10 +11,13 @@ import (
 	"gorm.io/gorm"
 )
 
+// Предполагается, что структуры User, Themes_Collection, Sub_Themes и другие
+// уже определены в других файлах вашего проекта и экспортируются (с большой буквы).
+
 type User struct {
 	ID           uint      `gorm:"primaryKey"`           // Уникальный идентификатор
 	Username     string    `gorm:"uniqueIndex;not null"` // Имя пользователя, уникальное и обязательное
-	Email        string    `gorm:"uniqueIndex;not null"` // Email пользователя, уникальный и обязательный
+	Email        string    `gorm:"uniqueIndex;not null"` // Email пользователя, уникальный и обязательное
 	PasswordHash string    `gorm:"not null"`             // Хэш пароля, обязательный
 	CreatedAt    time.Time // Время создания записи
 }
@@ -22,11 +25,13 @@ type User struct {
 var DB *gorm.DB
 
 func Init() {
+	// Загрузка переменных окружения
 	err := godotenv.Load("./resource/.env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file: ", err)
 	}
 
+	// Формирование строки подключения
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
 		os.Getenv("DB_HOST"),
@@ -38,17 +43,28 @@ func Init() {
 		os.Getenv("DB_TIMEZONE"),
 	)
 
+	// Подключение к базе данных
+	_db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	// !!! ВАЖНО: Проверка ошибки подключения ДОЛЖНА быть здесь, сразу после gorm.Open !!!
 	if err != nil {
-		panic("failed to connect to database")
+		log.Fatal("Failed to connect to database: ", err)
+	}
+	// Если мы дошли до этой строки, подключение успешно, _db != nil
+
+	// Автоматическая миграция структур в таблицы БД
+	// Убедитесь, что все используемые здесь структуры (User, Themes_Collection и т.д.)
+	// определены и импортированы (если находятся в других пакетах).
+	err = _db.AutoMigrate(
+		&User{},              // Модель пользователя
+		&Themes_Collection{}, // Модель основных тем
+		&Sub_Themes{},        // Модель подтем
+		&Topic{},             // Добавьте сюда другие модели, когда они будут созданы
+		&Post{},              // Например, Topic и Post для топиков и сообщений
+	)
+	if err != nil {
+		log.Fatal("Failed to migrate database: ", err)
 	}
 
-	_db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	_db.AutoMigrate(
-		&User{},
-		&Themes_Collection{},
-		&Sub_Themes{},
-	)
-
-	fmt.Println("Connected to the database successfully!")
+	fmt.Println("Connected to the database and migrated successfully!")
 	DB = _db
 }

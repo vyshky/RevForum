@@ -1,7 +1,7 @@
 // src/SubThemesList.jsx
 import React, { useState, useEffect } from 'react';
+import TopicsList from './TopicsList'; // Импортируем новый компонент для топиков
 
-// Предполагаем, что этот компонент получает themeId как пропс
 const SubThemesList = ({ themeId, themeTitle, onBack }) => {
     const [subThemes, setSubThemes] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -13,6 +13,9 @@ const SubThemesList = ({ themeId, themeTitle, onBack }) => {
     const [newSubThemeStatus, setNewSubThemeStatus] = useState('Активна');
     const [isCreating, setIsCreating] = useState(false);
     const [createMessage, setCreateMessage] = useState({ type: '', text: '' });
+
+    // Состояние для управления отображением: список подтем или топики конкретной подтемы
+    const [selectedSubTheme, setSelectedSubTheme] = useState(null);
 
     // Функция для получения подтем
     const fetchSubThemes = async () => {
@@ -115,6 +118,27 @@ const SubThemesList = ({ themeId, themeTitle, onBack }) => {
         setCreateMessage({ type: '', text: '' }); // Сброс сообщений при закрытии
     };
 
+    // Функция для перехода к отображению топиков конкретной подтемы
+    const handleViewTopics = (subTheme) => {
+        setSelectedSubTheme(subTheme);
+    };
+
+    // Функция для возврата к списку подтем
+    const handleBackToSubThemes = () => {
+        setSelectedSubTheme(null);
+    };
+
+    // Если выбрана конкретная подтема, отображаем TopicsList
+    if (selectedSubTheme) {
+        return (
+            <TopicsList
+                subThemeId={selectedSubTheme.id}
+                subThemeTitle={selectedSubTheme.title}
+                onBack={handleBackToSubThemes}
+            />
+        );
+    }
+
     if (!themeId) {
         return <div className="content-area"><p>Ошибка: Не выбрана тема для отображения подтем.</p></div>;
     }
@@ -122,14 +146,14 @@ const SubThemesList = ({ themeId, themeTitle, onBack }) => {
     if (loading && subThemes.length === 0) return <div className="content-area"><p>Загрузка подтем для "{themeTitle}"...</p></div>;
     if (error) return (
         <div className="content-area">
-            <button className="back-button" onClick={onBack}>Назад</button>
+            <button className="back-button" onClick={onBack}>Назад к темам</button>
             <p style={{ color: 'red' }}>Ошибка загрузки подтем: {error}</p>
         </div>
     );
 
     return (
         <div className="content-area subthemes-content">
-            <button className="back-button" onClick={onBack}>Назад</button>
+            <button className="back-button" onClick={onBack}>Назад к темам</button>
             <div className="subthemes-header">
                 <h2>Подтемы: "{themeTitle}"</h2>
             </div>
@@ -138,7 +162,12 @@ const SubThemesList = ({ themeId, themeTitle, onBack }) => {
             {subThemes.length > 0 ? (
                 <div className="subthemes-grid">
                     {subThemes.map((subTheme) => (
-                        <div key={subTheme.id} className="subtheme-card">
+                        <div
+                            key={subTheme.id}
+                            className="subtheme-card"
+                            // Делаем всю карточку кликабельной для перехода к топикам
+                            onClick={() => handleViewTopics(subTheme)}
+                        >
                             <div className="subtheme-title">{subTheme.title}</div>
                             <div className={`subtheme-status ${subTheme.status === 'Активна' ? '' : 'inactive'}`}>
                                 {subTheme.status}
@@ -148,8 +177,7 @@ const SubThemesList = ({ themeId, themeTitle, onBack }) => {
                                     Создано: {new Date(subTheme.created_at).toLocaleDateString()}
                                 </div>
                             )}
-                            {/* Здесь можно добавить кликабельность для перехода к сообщениям подтемы */}
-                            {/* <button className="view-posts-btn">Сообщения</button> */}
+                            {/* Убираем старую кнопку, так как вся карточка кликабельна */}
                         </div>
                     ))}
                 </div>
