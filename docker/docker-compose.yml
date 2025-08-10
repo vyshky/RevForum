@@ -20,7 +20,7 @@ services:
     container_name: node_container
     working_dir: /app
     volumes:
-      - ../frontend/rev-front:/app
+      - ../frontend:/app
     ports:
       - "80:5173"
     environment:
