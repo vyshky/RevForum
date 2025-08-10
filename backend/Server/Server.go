@@ -47,6 +47,12 @@ func Init_Server() {
 	router.POST("/api/themes/subthemes", database.CreateSubThemeHandler(database.DB))
 	router.GET("/api/themes/:id/subthemes", database.GetSubThemesHandler(database.DB))
 
+	router.POST("/api/themes/subthemes/topics", database.CreateTopicHandler)
+	router.GET("/api/themes/subthemes/:id/topics", database.GetTopicsBySubThemeHandler)
+
+	router.POST("/api/themes/subthemes/topics/posts", database.CreatePostHandler)         // Создание поста
+	router.GET("/api/themes/subthemes/topics/:id/posts", database.GetPostsByTopicHandler) // Получение постов по ID топика
+	
 	log.Println("Сервер запущен на http://localhost:8080/hello")
 	router.Run(":8080")
 }

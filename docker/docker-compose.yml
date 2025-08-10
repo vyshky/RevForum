@@ -25,7 +25,7 @@ services:
       - "80:5173"
     environment:
       - NODE_ENV=development
-    command: sh -c "npm install --legacy-peer-deps && npm run dev"
+    command: sh -c "npm install --legacy-peer-deps && npm install lucide-react && npm run dev"
     depends_on:
       - postgres
     networks:
