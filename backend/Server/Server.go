@@ -1,6 +1,7 @@
 package Server
 
 import (
+	"REVFORUM/controllers"
 	database "REVFORUM/database"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,8 @@ func Init_Server() {
 		AllowOrigins:     []string{"http://localhost"}, // Адрес твоего React-приложения
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"}, // Добавь Authorization, если используешь JWT
-		AllowCredentials: false,                                                                 // Установи true, если используешь куки/credentials
+		AllowCredentials: true,
+		ExposeHeaders:    []string{"Authorization"}, // Установи true, если используешь куки/credentials
 	}
 	router.Use(cors.New(config))
 
@@ -38,8 +40,10 @@ func Init_Server() {
 		c.JSON(http.StatusOK, users) // 200 OK со списком пользователей
 	})
 
-	router.POST("/api/register", database.RegisterHandler(database.DB))
-	router.POST("/api/login", database.LoginHandler(database.DB))
+	router.POST("/api/register", controllers.RegisterHandler(database.DB))
+	router.POST("/api/login", controllers.LoginHandler(database.DB))
+	router.GET("/api/login/validate", controllers.RequireAuth, controllers.Validate)
+	router.POST("/api/login/logout", controllers.LogoutHandler)
 
 	router.GET("/api/themes", database.GetThemesHandler(database.DB))
 	router.POST("/api/themes/create", database.CreateThemeHandler(database.DB))
@@ -52,7 +56,7 @@ func Init_Server() {
 
 	router.POST("/api/themes/subthemes/topics/posts", database.CreatePostHandler)         // Создание поста
 	router.GET("/api/themes/subthemes/topics/:id/posts", database.GetPostsByTopicHandler) // Получение постов по ID топика
-	
+
 	log.Println("Сервер запущен на http://localhost:8080/hello")
 	router.Run(":8080")
 }

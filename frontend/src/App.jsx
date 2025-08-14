@@ -1,23 +1,83 @@
 // src/App.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import Login from './Login'; // Импортируем компонент входа
-import Register from './Register'; // Импортируем компонент регистрации
-import ThemesList from './ThemesList'; // Импортируем компонент для тем
+import Login from './Login';
+import Register from './Register';
+import ThemesList from './ThemesList';
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  // Состояние для управления активной "страницей"
-  // По умолчанию 'home', чтобы сразу показывались темы
   const [activeView, setActiveView] = useState('home');
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Удалены статические данные categories
+  // Проверка аутентификации при загрузке приложения
+  useEffect(() => {
+    validateAuth();
+  }, []);
 
-  // Функция filterData удалена, так как категории больше не используются статически
-  // const filterData = () => { ... }
+  const validateAuth = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/login/validate', {
+        method: 'GET',
+        credentials: 'include' // Важно для отправки куков
+      });
 
-  // Удалена константа filteredCategories
-  // const filteredCategories = filterData();
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentUser(data.message);
+      }
+    } catch (error) {
+      console.error('Ошибка проверки аутентификации:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+    setActiveView('home');
+  };
+
+  const handleRegisterSuccess = (user) => {
+    // После успешной регистрации перенаправляем на страницу входа
+    setActiveView('login');
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/login/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      // Всегда сбрасываем состояние пользователя, независимо от ответа сервера
+      setCurrentUser(null);
+      setActiveView('home');
+
+      // Дополнительно удаляем куки на клиентской стороне
+      document.cookie = "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+
+    } catch (error) {
+      console.error('Ошибка выхода:', error);
+      // Даже если ошибка сети, все равно сбрасываем локальное состояние
+      setCurrentUser(null);
+      setActiveView('home');
+      // Принудительно удаляем куки
+      document.cookie = "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+    }
+  };
+
+  if (loading) {
+    return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-2xl">Загрузка...</div>
+        </div>
+    );
+  }
 
   return (
       <div className="forum-container">
@@ -25,7 +85,6 @@ const App = () => {
         <nav className="sidebar">
           <div className="logo">Форум</div>
           <ul>
-            {/* Пункт "Главная" - теперь отображает темы */}
             <li className={activeView === 'home' ? 'active' : ''} onClick={() => setActiveView('home')}>
               <div className="menu-icon">🏠</div>
               <span>Главная</span>
@@ -47,15 +106,24 @@ const App = () => {
               <span>Настройки</span>
             </li>
             <div className="divider"></div>
-            {/* Пункты "Темы" и "Пользователи" УДАЛЕНЫ */}
-            <li className={activeView === 'register' ? 'active' : ''} onClick={() => setActiveView('register')}>
-              <div className="menu-icon">📝</div>
-              <span>Регистрация</span>
-            </li>
-            <li className={activeView === 'login' ? 'active' : ''} onClick={() => setActiveView('login')}>
-              <div className="menu-icon">🔑</div>
-              <span>Войти</span>
-            </li>
+
+            {!currentUser ? (
+                <>
+                  <li className={activeView === 'register' ? 'active' : ''} onClick={() => setActiveView('register')}>
+                    <div className="menu-icon">📝</div>
+                    <span>Регистрация</span>
+                  </li>
+                  <li className={activeView === 'login' ? 'active' : ''} onClick={() => setActiveView('login')}>
+                    <div className="menu-icon">🔑</div>
+                    <span>Войти</span>
+                  </li>
+                </>
+            ) : (
+                <li onClick={handleLogout}>
+                  <div className="menu-icon">🚪</div>
+                  <span>Выйти</span>
+                </li>
+            )}
           </ul>
         </nav>
 
@@ -73,22 +141,26 @@ const App = () => {
             </div>
             <div className="user-menu">
               <div className="user-avatar">👤</div>
-              <span>Гость</span>
+              <span>{currentUser ? currentUser.Username : 'Гость'}</span>
             </div>
           </header>
 
-          {/* Основное содержимое - обновлено условное рендеринг */}
+          {/* Основное содержимое */}
           <main className="main-content-wrapper">
-            {/* Условный рендеринг: если 'home', показываем список тем */}
-            {/* Убрана проверка activeView === 'themes' */}
             {activeView === 'home' ? (
                 <ThemesList />
             ) : activeView === 'login' ? (
-                <Login />
+                currentUser ? (
+                    <div className="content-area">
+                      <p>Вы уже вошли в систему как {currentUser.Username}</p>
+                      <button onClick={() => setActiveView('home')}>Перейти на главную</button>
+                    </div>
+                ) : (
+                    <Login onLoginSuccess={handleLoginSuccess} />
+                )
             ) : activeView === 'register' ? (
-                <Register />
+                <Register onRegisterSuccess={handleRegisterSuccess} />
             ) : (
-                // Для остальных (search, members, ratings, settings) показываем заглушку
                 <div className="content-area">
                   <p>Содержимое для раздела "{activeView}" будет добавлено позже.</p>
                 </div>
