@@ -44,6 +44,7 @@ const Login = ({ onLoginSuccess }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include', // Важно для работы с куками
                 body: JSON.stringify({
                     username: formData.username.trim(),
                     password: formData.password
@@ -53,11 +54,25 @@ const Login = ({ onLoginSuccess }) => {
             const data = await response.json();
 
             if (response.ok) {
-                console.log('Успешный вход:', data);
-                if (onLoginSuccess) {
-                    onLoginSuccess(data.user, data.token);
+                console.log('Успешный вход');
+                // Получаем информацию о пользователе после входа
+                try {
+                    const validateResponse = await fetch('http://localhost:8080/api/login/validate', {
+                        method: 'GET',
+                        credentials: 'include'
+                    });
+
+                    if (validateResponse.ok) {
+                        const userData = await validateResponse.json();
+                        if (onLoginSuccess) {
+                            onLoginSuccess(userData.message);
+                        }
+                    }
+                } catch (validateError) {
+                    console.error('Ошибка получения данных пользователя:', validateError);
                 }
-                alert(data.message || 'Вход выполнен успешно!');
+
+                alert('Вход выполнен успешно!');
             } else {
                 setError(data.error || data.message || 'Ошибка входа в систему');
             }

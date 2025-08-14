@@ -64,9 +64,7 @@ func CreateThemeHandler(db *gorm.DB) gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка базы данных"})
 			return
 		}
-
-		db.AutoMigrate(&Themes_Collection{})
-
+		
 		// 3. Создание объекта темы для БД
 		// GORM автоматически заполнит ID и CreatedAt
 		newTheme := Themes_Collection{
